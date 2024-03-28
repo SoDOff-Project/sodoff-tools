@@ -246,7 +246,7 @@ def runGui():
                 return
         try:
             url = url_input.get(1.0, "end-1c")
-            edit(client_path, url)
+            edit(client_path, url, MakeBackup = not client_path.endswith("/assets/bin/Data/6eb4ac313b3875249a8c684d320f337f"))
         except Exception as err:
             messagebox.showerror("Error", str(err))
             return
