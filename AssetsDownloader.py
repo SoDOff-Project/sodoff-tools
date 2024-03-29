@@ -432,6 +432,9 @@ def runGui(server_config):
     
     def download_assets(update):
         nonlocal version, destination_path, parallel, root, log_output
+        if parallel is not None:
+            return
+        
         ver = version.get()
         if not ver in server_config["versions"] or not "src" in server_config["versions"][ver]:
             messagebox.showerror("Error", "Select version!")
@@ -452,25 +455,13 @@ def runGui(server_config):
         os.chdir(destination_path)
         parallel = runDownloadFromConfig(server_config, ver, update, DownloadLogStorage)
         
-        emptyCount = 0
         while not parallel.pool._inqueue.empty():
-            empty = True
             log_data = dict(parallel.config.Get('log_data'))
             text = log_data['full_log']
             for k in log_data:
                 if k != 'full_log':
                     if log_data[k] != "":
-                        empty = False
                         text += log_data[k] + "\n"
-            if not empty:
-                emptyCount = 0
-            else:
-                emptyCount += 1
-                if emptyCount > 5:
-                    parallel.pool.close()
-                    parallel.pool.terminate()
-                    parallel.pool = None
-                    break
 
             log_output.delete("1.0",tk.END)
             log_output.insert("end", text)
@@ -483,6 +474,8 @@ def runGui(server_config):
             messagebox.showerror("Error", ret[1])
         else:
             messagebox.showinfo("Download Complete", ret[1])
+        
+        parallel = None
     
     def stop_download_assets():
         nonlocal parallel
