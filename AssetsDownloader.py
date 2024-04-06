@@ -440,14 +440,9 @@ def runGui(server_config):
             messagebox.showerror("Error", "Select version!")
             return
         
-        if destination_path is None \
-           or (not os.path.exists(destination_path + "/SoDServer") \
-               and not os.path.exists(destination_path + "/SoDServer.exe") \
-               and not os.path.exists(destination_path + "/sodoff") \
-               and not os.path.exists(destination_path + "/sodoff.exe") \
-           ):
-                messagebox.showerror("Error", "Select Directory contain SoDOff server!")
-                return
+        if destination_path is None:
+            messagebox.showerror("Error", "Select the directory containing the SoDOff server!")
+            return
         
         log_output.insert("end", "Initializing ... please wait\n")
         root.update()
@@ -490,7 +485,15 @@ def runGui(server_config):
     
     def select_server_directory():
         nonlocal destination_path
-        destination_path = filedialog.askdirectory(title = "Select SoD server directory")
+        destination_path = filedialog.askdirectory(title = "Select SoDOff server directory")
+        if (not os.path.exists(destination_path + "/sodoff") \
+            and not os.path.exists(destination_path + "/sodoff.exe") \
+            and not os.path.exists(destination_path + "/sodoff.csproj") \
+           ):
+                ret = messagebox.showwarning("Warning!", "Selected directory DO NOT contain SoDOff server!", detail="Are you really sure you want to continue?", type='yesnocancel', default='cancel')
+                if ret != 'yes':
+                    destination_path = None
+                    return
         destination_input.configure(text=destination_path)
     
     version_label = tk.Label(root, text="Please choose version", font=("Arial", 10, "italic"), **guisettings)
