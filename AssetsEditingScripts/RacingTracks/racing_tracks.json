@@ -1,0 +1,9 @@
+[
+	{
+		"_TrackSceneName": "SCENE ASSET BUNDLE NAME OF TRACK",
+		"_Visible": 1,
+		
+		"Info 1": "!!! Need put rest of tracks info into this file !!!",
+		"Info 2": "See `_TrackData` in exported `TrackData-org.json` file for example"
+	}
+]

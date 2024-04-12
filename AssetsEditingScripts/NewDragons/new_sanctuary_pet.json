@@ -1,0 +1,7 @@
+{
+	"_Name": "Dragon name used for get animations",
+	"_TypeID": "Numeric ID ... must be unique ... use your prefix space",
+	
+	"Info 1": "!!! Need put rest of new dragon info into this file !!!",
+	"Info 2": "See single entry of `_PetTypes` in exported `SanctuaryData-org.json` file for example"
+}

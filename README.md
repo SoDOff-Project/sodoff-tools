@@ -4,6 +4,13 @@ This repo contains auxiliary tools for SoDOff server:
 
 * ClientPatcher - tool for change server address in client binaries
 * AssetsDownloader - tool for download assets
+* FileEncryption - tool for encrypt and decrypt DWADragonsMain.xml
+* AssetsEditingScripts - set of scripts for asset manipulation:
+  - AssetsManifest - edit `AssetBundleManifest` (in `dwadragonsmain`) to enforce download new asset and ensuring correct operation of the cache
+  - BattleShips - change battle ship types
+  - NewDragons - add new sanctuary dragons and new dragons fire types
+  - RacingTracks - customisation list of racing tracks
+  - TextureAndShaders - replace texture and shaders
 
 
 ## ClientPatcher
@@ -45,7 +52,7 @@ DWADragonsUnity/WIN/3.31.0/High/data/pfsanctuarydatado
 
 Path list can be obtained from `https://web.archive.org/cdx/search/cdx?output=json&fl=original&collapse=urlkey&matchType=prefix&url=s3.amazonaws.com/origin.ka.cdn/DWADragonsUnity/WIN/${Version}/${Quality}/` where `${Version}` should be replaced by version (e.g. `3.31.0`) and `${Quality}` by `Low`, `Mid` or `High`.
 
-## Build and run
+## Usage (ClientPatcher and AssetsDownloader)
 
 ### How to run
 
@@ -73,3 +80,10 @@ Notes:
 	`wine ~/.wine/drive_c/users/rrp/AppData/Local/Programs/Python/Python38-32/Scripts/pyinstaller.exe -F ClientPatcher.py`
 	or
 	`wine ~/.wine/drive_c/users/rrp/AppData/Local/Programs/Python/Python38-32/Scripts/pyinstaller.exe -F AssetsDownloader.py`
+
+## Usage (AssetsEditingScripts)
+
+1. install [Python](https://www.python.org/) with [UnityPy](https://pypi.org/project/UnityPy/) lib
+2. read info inside Python script about usage
+3. prepare the input data, adjust the script if necessary
+4. run script with Python

@@ -1,0 +1,13 @@
+{
+	"JS Games/Dragon Bumped Spec": {
+		"file": "FILEPATH_TO_EXPORTED_RAW_SHADER.dat",
+		"map": {
+			"Mapping IDs of dependencies used by exported shader": "to name of dependency shader",
+			"-5566645530566497496": "JS Games/Mobile/Dragon"
+		}
+	},
+	
+	"JS Games/Mobile/Dragon": {
+		"file": "FILEPATH_TO_ANOTHER_EXPORTED_RAW_SHADER.dat"
+	}
+}
