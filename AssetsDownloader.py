@@ -2,7 +2,7 @@
 
 # to install dependencies run: `pip install requests`
 
-dafault_server_config = "Assets_Downloader.json" 
+dafault_server_config = "Assets_Downloader.json"
 
 # dafault_server_config can be:
 #   - python directory
@@ -15,9 +15,9 @@ dafault_server_config = "Assets_Downloader.json"
 #     "title_label": "GUI WINDOWS MESSAGE",
 #     "parallel": NUMBER OF PARALLEL DOWNLOADS
 #     "versions": {
-#         "3.31 PC High": "DWADragonsUnity/WIN/3.31.0/High",
-#         "Content": "DWADragonsUnity/Content",
-#         "Mods": "DWADragonsUnity/Mods"
+#         "3.31 PC High": {"src": "DWADragonsUnity/WIN/3.31.0/High", "links": [["{src}/data/Content", "../../../../../Content"], ["{src}/movies", "../../../Movies"]]},
+#         "Content": {"src": "DWADragonsUnity/Content"},
+#         "Mods": {"src": "DWADragonsUnity/Mods", "prefix": "DWADragonsUnity/Mods/", "dst": "mods/"}
 #     }
 # }
 
@@ -320,7 +320,7 @@ def downloadAssets(
             continue;
         
         dir_path = os.path.dirname(local_path)
-        if not os.path.isdir(dir_path):
+        if dir_path and not os.path.isdir(dir_path):
             os.makedirs(dir_path)
         
         if parallel and parallel.pool:
@@ -337,6 +337,17 @@ def downloadAssets(
     
     return getDownloadResults(parallel, config)
 
+def createLinksFromConfig(list_info, config, base = ""):
+    for link in list_info["links"]:
+        dst = link[0].format(**list_info)
+        dst = config.Get('localprefix') + dst
+        if not (os.path.islink(dst) or os.path.exists(dst)):
+            dst_dir = os.path.dirname(dst)
+            if dst_dir and not os.path.isdir(dst_dir):
+                os.makedirs(dst_dir)
+            
+            os.makedirs(dst_dir + "/" + link[1])
+            os.symlink(link[1], dst)
 
 def getServerConfig(server_config):
     if isinstance(server_config, dict):
@@ -348,7 +359,7 @@ def getServerConfig(server_config):
     
     response = requests.get(server_config)
     if response.status_code != 200:
-        raise BaseException("Error while downloading config.")
+        raise RuntimeError("Error while downloading config.")
     
     return json.loads(response.text)
 
@@ -363,7 +374,7 @@ def getAssetList(path, config):
     
     response = requests.get(url)
     if response.status_code != 200:
-        return(3, "Error while downloading assets list.")
+        raise RuntimeError("Error while downloading assets list.")
     
     log.Done()
     
@@ -378,11 +389,15 @@ def runDownloadFromConfig(server_config, list_name, update_mode, log_system=Down
         parallel = None
         runconfig = DownloadSettings(sleep_time=server_config.get("sleep_time", 0), update_mode=update_mode, urlprefix=server_config["server"])
     
+    asset_list = getAssetList(server_config["versions"][list_name]["src"], runconfig)
+    
     if "dst" in server_config["versions"][list_name]:
         runconfig.Set("localprefix", server_config["versions"][list_name]["dst"])
         runconfig.Set("altlocalprefix", None)
     
-    asset_list = getAssetList(server_config["versions"][list_name]["src"], runconfig)
+    if "prefix" in server_config["versions"][list_name]:
+        runconfig.Set("urlprefix", server_config["server"] + server_config["versions"][list_name]["prefix"])
+    
     downloadAssets(asset_list, runconfig, parallel)
     
     return parallel
@@ -435,8 +450,8 @@ def runGui(server_config):
         if parallel is not None:
             return
         
-        ver = version.get()
-        if not ver in server_config["versions"] or not "src" in server_config["versions"][ver]:
+        list_name = version.get()
+        if not list_name in server_config["versions"] or not "src" in server_config["versions"][list_name]:
             messagebox.showerror("Error", "Select version!")
             return
         
@@ -448,7 +463,13 @@ def runGui(server_config):
         root.update()
         
         os.chdir(destination_path)
-        parallel = runDownloadFromConfig(server_config, ver, update, DownloadLogStorage)
+        
+        try:
+            parallel = runDownloadFromConfig(server_config, list_name, update, DownloadLogStorage)
+        except Exception as err:
+            messagebox.showerror("Error", err)
+            parallel = None
+            return
         
         while not parallel.pool._inqueue.empty():
             log_data = dict(parallel.config.Get('log_data'))
@@ -469,6 +490,12 @@ def runGui(server_config):
             messagebox.showerror("Error", ret[1])
         else:
             messagebox.showinfo("Download Complete", ret[1])
+        
+        if "links" in server_config["versions"][list_name]:
+            try:
+                createLinksFromConfig(server_config["versions"][list_name], parallel.config)
+            except Exception as err:
+                messagebox.showwarning("Warning", "Error while creating links: " + str(err))
         
         parallel = None
     
@@ -499,7 +526,7 @@ def runGui(server_config):
     version_label = tk.Label(root, text="Please choose version", font=("Arial", 10, "italic"), **guisettings)
     version_label.grid(row=1, column=0, columnspan=1, sticky="n")
     
-    version_dropdown = ttk.Combobox(root, textvariable=version, values=list(server_config["versions"].keys()), state="readonly", width=15)
+    version_dropdown = ttk.Combobox(root, textvariable=version, values=list(server_config["versions"].keys()), state="readonly", width=21)
     version_dropdown.grid(row=3, column=0, columnspan=1, pady=(5,10))
     
     destination_label = tk.Label(root, text="Please choose server folder", font=("Arial", 10, "italic"), **guisettings)
@@ -572,12 +599,15 @@ if __name__ == "__main__":
         server_config = getServerConfig(args.config)
 
         if not args.list_name in server_config["versions"] or not "src" in server_config["versions"][args.list_name]:
-            raise BaseException("Invalid --list-name argument value")
+            raise RuntimeError("Invalid --list-name argument value")
 
         parallel = runDownloadFromConfig(server_config, args.list_name, args.update)
         if parallel:
             parallel.pool.close()
             parallel.pool.join()
+
+        if "links" in server_config["versions"][list_name]:
+            createLinksFromConfig(server_config["versions"][list_name], parallel.config)
 
     elif args.url_prefix is not None and args.path_list is not None :
         ret = downloadAssets(open(args.path_list), DownloadSettings(sleep_time=2, urlprefix=args.url_prefix, update_mode=args.update))
