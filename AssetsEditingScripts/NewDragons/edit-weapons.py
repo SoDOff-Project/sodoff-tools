@@ -8,12 +8,16 @@
 
 import UnityPy
 
-import json, os
+import json, os, sys
 
 out_debug = "."
 
-in_asset = "./dragonsres_org"
-out_asset = "./dragonsres"
+if len(sys.argv) > 2:
+    in_asset = sys.argv[1]
+    out_asset = sys.argv[2]
+else:
+    in_asset = "./dragonsres_org"
+    out_asset = "./dragonsres"
 
 asset_flags = (
     # data_flag

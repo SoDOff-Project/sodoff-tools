@@ -12,8 +12,12 @@ import json, os, sys
 
 out_debug =  "./" # + (sys.argv[1] if len(sys.argv) > 1 else "")
 
-in_asset = "./dragonracingdo_org"
-out_asset = "./dragonracingdo"
+if len(sys.argv) > 2:
+    in_asset = sys.argv[1]
+    out_asset = sys.argv[2]
+else:
+    in_asset = "./dragonracingdo_org"
+    out_asset = "./dragonracingdo"
 newTracksData = json.load(open(os.path.dirname(__file__) + "/racing_tracks.json"))
 
 asset_flags = (

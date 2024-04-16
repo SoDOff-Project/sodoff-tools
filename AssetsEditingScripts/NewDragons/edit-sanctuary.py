@@ -8,15 +8,19 @@
 
 import UnityPy
 
-import json, os
+import json, os, sys
 
 out_debug = "."
 
 newPetType = ("Tough", "Ice")
 newPetData = json.load(open(os.path.dirname(__file__) + "/new_sanctuary_pet.json"))
 
-in_asset = "./pfsanctuarydatado_org"
-out_asset = "./pfsanctuarydatado"
+if len(sys.argv) > 2:
+    in_asset = sys.argv[1]
+    out_asset = sys.argv[2]
+else:
+    in_asset = "./pfsanctuarydatado_org"
+    out_asset = "./pfsanctuarydatado"
 
 
 asset_flags = (

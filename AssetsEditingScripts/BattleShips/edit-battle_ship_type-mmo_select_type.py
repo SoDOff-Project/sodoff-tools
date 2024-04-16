@@ -11,8 +11,12 @@ import json, os, sys
 
 out_debug =  "."
 
-in_asset = "./hubtrainingdo_org"
-out_asset = "./hubtrainingdo"
+if len(sys.argv) > 2:
+    in_asset = sys.argv[1]
+    out_asset = sys.argv[2]
+else:
+    in_asset = "./hubtrainingdo_org"
+    out_asset = "./hubtrainingdo"
 
 asset_flags = (
     # data_flag

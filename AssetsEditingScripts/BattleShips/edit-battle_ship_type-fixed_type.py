@@ -33,8 +33,12 @@ ship_object2 = "PfBattleBoatWorldEventDreadfall2"
 ship_name1 = "Dreadfall Scout"
 ship_name2 = "Dreadfall Scout"
 
-in_asset = "./hubtrainingdo_org"
-out_asset = "./hubtrainingdo"
+if len(sys.argv) > 2:
+    in_asset = sys.argv[1]
+    out_asset = sys.argv[2]
+else:
+    in_asset = "./hubtrainingdo_org"
+    out_asset = "./hubtrainingdo"
 
 asset_flags = (
     # data_flag

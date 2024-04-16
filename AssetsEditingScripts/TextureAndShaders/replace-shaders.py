@@ -4,7 +4,7 @@
     Script for replacing shaders in asset bundle.
     Allow use og shaders in custom build asset bundles.
     
-    Need configure list of replaced shaders in repleace-shaders.json
+    Need configure list of replaced shaders in replace-shaders.json
 """
 
 import UnityPy
@@ -33,7 +33,7 @@ if not os.path.isfile(in_asset):
     exit()
 
 env = UnityPy.load(in_asset)
-shaders = json.load(open(os.path.dirname(__file__) + "/repleace-shaders.json"))
+shaders = json.load(open(os.path.dirname(__file__) + "/replace-shaders.json"))
 
 for obj in env.objects:
     if obj.type.name == "Shader":
