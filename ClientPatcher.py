@@ -132,7 +132,7 @@ def edit(resourcesAssetsFile, NewURL, GameIDstring = None, NewApiKey = None, Mak
         elif GameIDstring.startswith("JSMythies"):
             NewApiKey = "E20150CC-FF70-435C-90FD-341DC9161CC3"
         elif GameIDstring.startswith("MathBlaster"):
-            NewApiKey = "34B0AE13-ECCC-4D64-B6D0-733D2562080E"
+            NewApiKey = "6738196d-2a2c-4ef8-9b6e-1252c6ec7325"
         elif GameIDstring.startswith("MainStreet"):
             if VersionInfo[0] == 1 and VersionInfo[1] > 2:
                 NewApiKey = "15A1A21A-4A95-46F5-80E2-58574DA65875"
