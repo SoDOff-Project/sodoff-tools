@@ -5,6 +5,7 @@ This repo contains auxiliary tools for SoDOff server:
 * ClientPatcher - tool for change server address in client binaries
 * AssetsDownloader - tool for download assets
 * FileEncryption - tool for encrypt and decrypt DWADragonsMain.xml
+* MakePassword - tool for create password hash for reset password directly in SoDOff database
 * AssetsEditingScripts - set of scripts for asset manipulation:
   - AssetsManifest - edit `AssetBundleManifest` (in `dwadragonsmain`) to enforce download new asset and ensuring correct operation of the cache
   - BattleShips - change battle ship types
