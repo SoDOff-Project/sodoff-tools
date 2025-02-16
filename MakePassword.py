@@ -19,6 +19,6 @@ def makePassword(password):
 if __name__ == "__main__":
 	import sys
 	if len (sys.argv) == 1:
-		print (f"USAGE {sys.argv[0]} input_file [decrypt]")
+		print (f"USAGE {sys.argv[0]} password")
 	else:
 		print (makePassword(sys.argv[1]))

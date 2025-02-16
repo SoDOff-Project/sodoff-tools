@@ -73,6 +73,6 @@ if __name__ == "__main__":
     print (f"USAGE {sys.argv[0]} input_file [decrypt]")
   elif len (sys.argv) > 2 and sys.argv[2] == "decrypt":
     print(decrypt(open(sys.argv[1]).read(), ASCII_KEY, ASCII_CODING), end='')
-  else
+  else:
     print(encrypt(open(sys.argv[1]).read(), ASCII_KEY, ASCII_CODING).decode(), end='')
 
